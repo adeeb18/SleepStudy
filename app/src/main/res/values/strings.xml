@@ -8,5 +8,7 @@
     <string name="begin_sleep">Begin Sleep</string>
     <string name="lumen_values">Lumen Values:</string>
     <string name="pause_sleep">Pause Sleep</string>
+    <string name="reset_sleep">Reset Night</string>
+    <string name="woke_up">I Woke Up</string>
 
 </resources>

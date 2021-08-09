@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.icu.text.LocaleDisplayNames;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +32,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class fragment2 extends Fragment implements SensorEventListener {
 
@@ -45,9 +50,13 @@ public class fragment2 extends Fragment implements SensorEventListener {
     ConstraintLayout viewSensor;
     Button startSleepButton;
     Button pauseSleepButton;
+    Button resetSleepButton;
     //Writing to file
 
     GraphView lightGraph;
+    Date currentTime;
+    String formattedDate;
+    String lightfile = "light_";
 
 
 
@@ -65,9 +74,12 @@ public class fragment2 extends Fragment implements SensorEventListener {
         lightSensor = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
         viewSensor.setVisibility(View.INVISIBLE);
 
+        currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        formattedDate = df.format(currentTime);
+        lightfile = lightfile + formattedDate + ".txt";
 
         startSleepButton = (Button) view.findViewById(R.id.begin_sleep_button);
-
         startSleepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +96,16 @@ public class fragment2 extends Fragment implements SensorEventListener {
                 viewSensor.setVisibility(View.INVISIBLE);
                 String s = readFromFile(getActivity().getApplicationContext());
                 graphLumens(s);
+            }
+        });
+
+        resetSleepButton = (Button) view.findViewById(R.id.reset_sleep_button);
+        resetSleepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getApplicationContext().deleteFile(lightfile);
+                resetSleepButton.setEnabled(false);
+                lightGraph.removeAllSeries();
             }
         });
 
@@ -126,10 +148,12 @@ public class fragment2 extends Fragment implements SensorEventListener {
 
     private void writeToFile(String data, Context context)  {
         try {
-            OutputStreamWriter osw = new OutputStreamWriter(context.openFileOutput("light.txt", Context.MODE_APPEND));
+
+            OutputStreamWriter osw = new OutputStreamWriter(context.openFileOutput(lightfile, Context.MODE_APPEND));
             osw.write(data);
             osw.write(",");
             osw.close();
+            resetSleepButton.setEnabled(true);
         }
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
@@ -139,7 +163,7 @@ public class fragment2 extends Fragment implements SensorEventListener {
     private String readFromFile(Context context) {
         String ret = "";
         try {
-            InputStream is = context.openFileInput("light.txt");
+            InputStream is = context.openFileInput(lightfile);
             if(is!=null) {
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
@@ -175,8 +199,8 @@ public class fragment2 extends Fragment implements SensorEventListener {
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
 
-        for(int i = 0; i < 198; i++) {
-            series.appendData(new DataPoint(i,al.get(i)),true, 200);
+        for(int i = 0; i < al.size(); i++) {
+            series.appendData(new DataPoint(i,al.get(i)),true, 1000);
         }
         Log.d("GraphView", series.toString());
         lightGraph = (GraphView) getActivity().findViewById(R.id.graph);
