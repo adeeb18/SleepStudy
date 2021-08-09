@@ -13,7 +13,7 @@
             android:id="@+id/sensorTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif-thin"
             android:text="@string/sensor_title"
             android:textColor="@color/black"
@@ -26,7 +26,7 @@
             android:id="@+id/begin_sleep_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-light"
             android:text="@string/begin_sleep"
             android:textColor="@color/black"
@@ -38,15 +38,15 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
-            android:layout_width="344dp"
-            android:layout_height="200dp"
+            android:layout_width="271dp"
+            android:layout_height="147dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/begin_sleep_button"
-            app:layout_constraintVertical_bias="0.256">
+            app:layout_constraintVertical_bias="0.024">
 
             <TextView
                 android:id="@+id/lumen_values"
@@ -88,11 +88,22 @@
                 app:backgroundTint="@color/cream"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.525"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/lumen_values"
-                app:layout_constraintVertical_bias="0.331" />
+                app:layout_constraintVertical_bias="0.162" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="413dp"
+            android:layout_height="128dp"
+            android:layout_marginBottom="36dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

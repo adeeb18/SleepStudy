@@ -19,6 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -42,6 +46,8 @@ public class fragment2 extends Fragment implements SensorEventListener {
     Button startSleepButton;
     Button pauseSleepButton;
     //Writing to file
+
+    GraphView lightGraph;
 
 
 
@@ -80,6 +86,7 @@ public class fragment2 extends Fragment implements SensorEventListener {
                 graphLumens(s);
             }
         });
+
 
         return view;
     }
@@ -159,12 +166,20 @@ public class fragment2 extends Fragment implements SensorEventListener {
         Log.d("First", split[0]);
         Log.d("Second", split[1]);
         String lumens = split[1];
-        ArrayList<Double> al = new ArrayList<Double>();
+        ArrayList<Integer> al = new ArrayList<Integer>();
         while(lumens.indexOf(",") != -1) {
             String[] splitNew = lumens.split(",", 2);
             double d = Double.parseDouble(splitNew[0]);
-            al.add(d);
+            al.add((int)d);
             lumens = splitNew[1];
         }
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+
+        for(int i = 0; i < 198; i++) {
+            series.appendData(new DataPoint(i,al.get(i)),true, 200);
+        }
+        Log.d("GraphView", series.toString());
+        lightGraph = (GraphView) getActivity().findViewById(R.id.graph);
+        lightGraph.addSeries(series);
     }
 }
