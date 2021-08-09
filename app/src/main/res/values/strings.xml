@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Sleep Study</string>
+    <string name="tab_text_1">Sleep History</string>
+    <string name="tab_text_2">Begin Sleep</string>
+    <string name="tab_text_3">Settings</string>
+
+    <string name="sensor_title">Sleep Sensor</string>
+    <string name="begin_sleep">Begin Sleep</string>
+    <string name="lumen_values">Lumen Values:</string>
+    <string name="pause_sleep">Pause Sleep</string>
+
+</resources>
