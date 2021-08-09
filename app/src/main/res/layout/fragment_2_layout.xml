@@ -54,8 +54,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
-            android:layout_width="271dp"
-            android:layout_height="147dp"
+            android:layout_width="268dp"
+            android:layout_height="118dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,15 +69,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:text="hello"
+                android:text="@string/light_values_here"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintHorizontal_bias="0.504"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.237" />
+                app:layout_constraintVertical_bias="0.395" />
 
             <TextView
                 android:id="@+id/lumen_title"
@@ -104,10 +104,9 @@
                 app:backgroundTint="@color/cream"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.101"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/lumen_values"
-                app:layout_constraintVertical_bias="0.127" />
+                app:layout_constraintVertical_bias="0.515" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

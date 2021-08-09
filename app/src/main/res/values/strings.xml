@@ -10,5 +10,6 @@
     <string name="pause_sleep">Pause Sleep</string>
     <string name="reset_sleep">Reset Night</string>
     <string name="woke_up">I Woke Up</string>
+    <string name="light_values_here">Light Values Here</string>
 
 </resources>

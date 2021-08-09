@@ -43,77 +43,91 @@ public class fragment2 extends Fragment implements SensorEventListener {
     //Light Sensor
     SensorManager sm;
     Sensor lightSensor;
+
     private Context context;
+
     //Printing to Screen
     TextView lumenValues;
     boolean listenOn;
     ConstraintLayout viewSensor;
+
+    //Buttons
     Button startSleepButton;
     Button pauseSleepButton;
     Button resetSleepButton;
-    //Writing to file
 
+    //Graphing
+    //Graph against time? TODO
     GraphView lightGraph;
     Date currentTime;
     String formattedDate;
-    String lightfile = "light_";
 
+    //File resets at midnight!!! TODO
+    String lightfile = "light_";
 
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        //Initialize Sliding tabs
         View view = inflater.inflate(R.layout.fragment_2_layout, container, false);
 
+        //Initialize Sensor and Screen View
         lumenValues = (TextView) view.findViewById(R.id.lumen_values);
-        viewSensor = (ConstraintLayout) view.findViewById(R.id.constraintLayout2);
 
+        viewSensor = (ConstraintLayout) view.findViewById(R.id.constraintLayout2);
         sm = (SensorManager) getActivity().getSystemService(Service.SENSOR_SERVICE);
 
         lightSensor = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
         viewSensor.setVisibility(View.INVISIBLE);
 
+        //Create filename
         currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         formattedDate = df.format(currentTime);
         lightfile = lightfile + formattedDate + ".txt";
 
+        //Initialize Start Button
         startSleepButton = (Button) view.findViewById(R.id.begin_sleep_button);
         startSleepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Begin sensing and view output
                 listenOn = true;
                 viewSensor.setVisibility(View.VISIBLE);
             }
         });
 
+        //Initialize Pause Button
         pauseSleepButton = (Button) view.findViewById(R.id.pause_sleep_button);
         pauseSleepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Turn off sensing
                 listenOn = false;
                 viewSensor.setVisibility(View.INVISIBLE);
+                //Print to graph
                 String s = readFromFile(getActivity().getApplicationContext());
                 graphLumens(s);
             }
         });
 
+        //Initialize Reset Butotn
         resetSleepButton = (Button) view.findViewById(R.id.reset_sleep_button);
         resetSleepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Delete file
                 getActivity().getApplicationContext().deleteFile(lightfile);
                 resetSleepButton.setEnabled(false);
+                //Remove graph series
                 lightGraph.removeAllSeries();
             }
         });
 
-
         return view;
     }
-
-
 
     @Override
     public void onPause() {
@@ -133,10 +147,11 @@ public class fragment2 extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if(listenOn) {
             if(event.sensor.getType() == Sensor.TYPE_LIGHT){
+                //Print to screen
                 lumenValues.setText("Light Value: " + event.values[0]);
                 float val = event.values[0];
+                //Print to file
                 writeToFile(String.valueOf(val), getActivity().getApplicationContext());
-                Log.d("Written to file", "onSensorChanged: ");
             }
         }
     }
@@ -148,7 +163,6 @@ public class fragment2 extends Fragment implements SensorEventListener {
 
     private void writeToFile(String data, Context context)  {
         try {
-
             OutputStreamWriter osw = new OutputStreamWriter(context.openFileOutput(lightfile, Context.MODE_APPEND));
             osw.write(data);
             osw.write(",");
@@ -186,9 +200,8 @@ public class fragment2 extends Fragment implements SensorEventListener {
     }
 
     private void graphLumens(String s) {
+        //Convert string to int array
         String[] split = s.split(",", 2);
-        Log.d("First", split[0]);
-        Log.d("Second", split[1]);
         String lumens = split[1];
         ArrayList<Integer> al = new ArrayList<Integer>();
         while(lumens.indexOf(",") != -1) {
@@ -197,12 +210,15 @@ public class fragment2 extends Fragment implements SensorEventListener {
             al.add((int)d);
             lumens = splitNew[1];
         }
+
+        //Create series
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
 
         for(int i = 0; i < al.size(); i++) {
             series.appendData(new DataPoint(i,al.get(i)),true, 1000);
         }
-        Log.d("GraphView", series.toString());
+
+        //Add series to graph
         lightGraph = (GraphView) getActivity().findViewById(R.id.graph);
         lightGraph.addSeries(series);
     }
